@@ -1,4 +1,5 @@
 #include "BinaryTree.h"
+#include <vector>
 
 int main()
 {
@@ -6,7 +7,6 @@ int main()
 	tree.insert('E');
 	tree.insert('D');
 	tree.insert('H');
-	tree.insert('D');
 	tree.insert('B');
 	tree.insert('F');
 	tree.insert('A');
@@ -14,4 +14,7 @@ int main()
 	tree.insert('G');
 
 	tree.traverse();
+
+	std::vector<char> charVec;
+	tree.toPreOrderSequence(charVec);
 }
