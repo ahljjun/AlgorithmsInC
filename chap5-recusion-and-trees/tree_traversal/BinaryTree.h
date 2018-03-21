@@ -6,6 +6,7 @@
 #include <utility>
 #include <functional>
 #include <vector>
+#include <queue>
 
 template <class T>
 class BinaryTree
@@ -33,26 +34,89 @@ public:
 
 	void toPreOrderSequence(std::vector<T>& seq)
 	{
+		seq.clear();
 		auto f = [&seq](TreeNode* x) { seq.push_back(x->data); };
 		traverse_preorder(root, f);
 
 #ifdef DEBUG
-		std::cout<< "toPreOrderSequence: "<<std::endl;
+		std::cout<< "toPreOrderSequence: ";
 		for (auto v : seq) {
 			std::cout<< v <<", ";
 		}
+		std::cout<<"\n";
 #endif
 	}
 
-	void traverse()
+	void toInOrderSequence(std::vector<T>& seq)
 	{
-		auto f = [](TreeNode* x) { std::cout<< x->data<<", "; };
-		traverse_preorder(root, f);
+		seq.clear();
+		auto f = [&seq](TreeNode* x) { seq.push_back(x->data); };
+		traverse_inorder(root, f);
+
+#ifdef DEBUG
+		std::cout<< "toInOrderSequence: ";
+		for (auto v : seq) {
+			std::cout<< v <<", ";
+		}
+		std::cout<<"\n";
+#endif
 	}
 
+	void toPostOrderSequence(std::vector<T>& seq)
+	{
+		seq.clear();
+		auto f = [&seq](TreeNode* x) { seq.push_back(x->data); };
+		traverse_postorder(root, f);
 
+#ifdef DEBUG
+		std::cout<< "toPostOrderSequence: ";
+		for (auto v : seq) {
+			std::cout<< v <<", ";
+		}
+		std::cout<<"\n";
+#endif
+	}
+
+	void toLevelOrderSequence(std::vector<T>& seq)
+	{
+		seq.clear();
+		auto f = [&seq](TreeNode* x) { seq.push_back(x->data); };
+		traverse_level_order(root, f);
+
+#ifdef DEBUG
+		std::cout<< "toLevelOrderSequence: ";
+		for (auto v : seq) {
+			std::cout<< v <<", ";
+		}
+		std::cout<<"\n";
+#endif
+	}	
+
+	void traverse()
+	{
+		auto f = [](TreeNode* x) { std::cout<< x->data <<", "; };
+		traverse_preorder(root, f);
+		std::cout<<"\n";
+	}
 
 private:
+
+	void traverse_level_order(TreeNode* root, std::function<void(TreeNode*)> processFunc)
+	{
+		if ( root == nullptr )
+			return;
+		std::queue<TreeNode*> nodeQ;
+		nodeQ.push(root);
+
+		while(!nodeQ.empty()){
+			TreeNode *node = nodeQ.front();
+			processFunc(node);
+			nodeQ.pop();
+
+			if(node->left) nodeQ.push(node->left);
+			if(node->right) nodeQ.push(node->right);
+		}
+	}
 
 	void traverse_preorder(TreeNode* root, std::function<void(TreeNode*)> processFunc)
 	{
@@ -145,22 +209,23 @@ private:
 		}
 	}
 
-	void traverse_inorder(TreeNode* root)
+	void traverse_inorder(TreeNode* root, std::function<void (TreeNode*)> processFunc)
 	{
 		if ( root == nullptr ) return;
 
-		traverse_inorder(root->left);
-		std::cout<< root->data << ", ";
-		traverse_inorder(root->right);
+		traverse_inorder(root->left, processFunc);
+		processFunc(root);
+		traverse_inorder(root->right, processFunc);
 	}
 
-	void traverse_postorder(TreeNode* root)
+	void traverse_postorder(TreeNode* root, std::function<void(TreeNode*)> processFunc)
 	{
 		if ( root == nullptr ) return;
 
-		traverse_postorder(root->left);
-		traverse_postorder(root->right);
-		std::cout<< root->data << ", ";
+		traverse_postorder(root->left, processFunc);
+		traverse_postorder(root->right, processFunc);
+
+		processFunc(root);
 	}
 
 

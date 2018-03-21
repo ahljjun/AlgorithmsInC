@@ -13,8 +13,25 @@ int main()
 	tree.insert('C');
 	tree.insert('G');
 
+	/*
+	    E
+	 D     H
+  B      F		 	 
+A   C       G   
+
+	*/
+
 	tree.traverse();
 
-	std::vector<char> charVec;
-	tree.toPreOrderSequence(charVec);
+	std::vector<char> preOrderVec;
+	tree.toPreOrderSequence(preOrderVec);
+
+	std::vector<char> inOrderVec;
+	tree.toInOrderSequence(inOrderVec);	
+
+	std::vector<char> postOrderVec;
+	tree.toPostOrderSequence(postOrderVec);	
+
+	std::vector<char> levelOrderVec;
+	tree.toLevelOrderSequence(levelOrderVec);		
 }
