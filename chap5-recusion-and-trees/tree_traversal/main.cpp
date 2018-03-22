@@ -35,5 +35,7 @@ A   C       G
 	std::vector<char> levelOrderVec;
 	tree.toLevelOrderSequence(levelOrderVec);	
 
-	tree.printTree();	
+	tree.printTree();
+
+	std::cout<<"leaf count: "<<tree.leafCount() << "\n";	
 }

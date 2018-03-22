@@ -122,7 +122,51 @@ public:
 		count2(root, 0);
 	}
 
+	int leafCount() // for ex 5.86
+	{
+#ifdef DEBUG
+		return leafCount_non_recursive(root);
+#endif
+		return leafCount(root);
+	}
+
 private:
+	int leafCount(TreeNode *node)
+	{
+		if (node ==nullptr) return 0;
+		if ( !node->left && !node->right) return 1;
+
+		return leafCount(node->left) + leafCount(node->right);
+	}
+
+	int leafCount_non_recursive(TreeNode *node)
+	{
+		if (node ==nullptr) return 0;
+		if ( !node->left && !node->right) return 1;
+
+		std::queue<TreeNode*> nodeQ;
+		nodeQ.push(node);
+		int cnt = 0;
+
+		while(!nodeQ.empty())
+		{
+			TreeNode *tn = nodeQ.front();
+			nodeQ.pop();
+
+			if ( !tn->left && !tn->right ){
+				cnt++;
+				continue;
+			}
+
+			if ( tn->left )
+				nodeQ.push(tn->left);
+			
+			if (tn->right)
+				nodeQ.push(tn->right);
+		}
+
+		return cnt;
+	}
 
 	void printnode(TreeNode *node, int h)
 	{
