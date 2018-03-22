@@ -99,7 +99,67 @@ public:
 		std::cout<<"\n";
 	}
 
+	void printTree()
+	{
+		printTree1(root, 0);
+	}
+
+	BinaryTree<T>* contructTree1(const std::vector<T>& preOrder, const std::vector<T>& inOrder)
+	{
+		//Unsupported yet
+		return NULL;
+	}
+
+	BinaryTree<T>* contructTree2(const std::vector<T>& preOrder, const std::vector<T>& inOrder)
+	{
+		//unsupported yet
+		return NULL;		
+	}
+
+	int count() const 
+	{
+		return count1(root);
+		count2(root, 0);
+	}
+
 private:
+
+	void printnode(TreeNode *node, int h)
+	{
+		for(int i=0; i < h; i++)
+			std::cout<<" ";
+		if (node)
+			std::cout<<node->data<<"\n";
+		else
+			std::cout<<"*"<<"\n";
+	}
+	void printTree1(TreeNode* root, int height)
+	{
+		if ( root==nullptr ) { printnode(nullptr, height); return; }
+		printTree1(root->left, height+1);
+		printnode(root, height);
+		printTree1(root->right, height+1);
+	}
+
+	int count1(TreeNode* root)
+	{
+		if ( root==nullptr ) return 0;
+		return count1(root->left) + count1(root->right) + 1;
+	}
+
+	//TODO: is it possible using tail recursive for count?
+
+	int height1(TreeNode* root)
+	{
+		if ( root==nullptr )
+			return -1;
+
+		int u, v;
+		u = height1(root->left);
+		v = height1(root->right);
+		if ( u > v ) return u+1;
+		else return v+1;
+	}
 
 	void traverse_level_order(TreeNode* root, std::function<void(TreeNode*)> processFunc)
 	{

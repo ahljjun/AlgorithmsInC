@@ -33,5 +33,7 @@ A   C       G
 	tree.toPostOrderSequence(postOrderVec);	
 
 	std::vector<char> levelOrderVec;
-	tree.toLevelOrderSequence(levelOrderVec);		
+	tree.toLevelOrderSequence(levelOrderVec);	
+
+	tree.printTree();	
 }
