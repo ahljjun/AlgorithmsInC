@@ -174,4 +174,32 @@ shaker_sort(std::array<T, N>& arr)
     }
 }
 
+//ex6.30, shaker sort
+template <class T, size_t N>
+void
+shaker_sort(std::array<T, N>& arr)
+{
+	int left = 0;
+	int right = N;
+	int shift;
+
+	while(left < right){
+		for(int i=left+1; i<right; i++){
+			if ( arr[i-1] > arr[i] ){
+				std::swap(arr[i-1], arr[i]);
+				shift = i;
+			}
+		}
+		right = shift;
+
+		for(int i=right-1; i>left; i--){
+			if (arr[i-1] > arr[i]){
+				std::swap(arr[i-1], arr[i]);
+				shift = i;
+			}
+		}
+		left = shift;
+	}
+}
+
 #endif
