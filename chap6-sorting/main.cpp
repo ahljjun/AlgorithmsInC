@@ -3,13 +3,13 @@
 
 int main()
 {
-	std::array<int, 10> arr;
-	generateRandomDataSet(arr);
+    std::array<int, 1000> arr;
+    generateRandomDataSet(arr);
 
-	bubble_sort(arr);
-	//insertion_sort_1(arr);
+    shaker_sort(arr);
+    //insertion_sort_1(arr);
 
-	std::cout<<"after non-adaptive selection sort: "<<"\n";
+    std::cout<<"after non-adaptive bubble sort: "<<"\n";
 
-	std::copy(arr.begin(), arr.end(), std::ostream_iterator<int>(std::cout, ", "));
+    std::copy(arr.begin(), arr.end(), std::ostream_iterator<int>(std::cout, ", "));
 }
