@@ -1,15 +1,38 @@
 #include "utility.h"
 #include <array>
 
+
+
+
+void quick_sort_test()
+{
+    std::array<int, 100> arr;
+
+    generateRandomDataSet(arr);
+    std::cout<<"data to be sorted by quicksort: "<<std::endl;
+    dumpData(arr);
+    quick_sort(arr);
+    std::cout<<"data after sorted by quicksort: "<<std::endl;
+    dumpData(arr);
+}
+
+void generateBestDataSetForQSort_test()
+{
+
+    std::array<int, 20> arr;
+    generateBestDataSetForQSort(arr);
+    std::cout<<"data for QSort: "<<std::endl;
+    dumpData(arr);
+
+    quick_sort(arr);
+}
+ 
+
+
 int main()
 {
-    std::array<int, 1000> arr;
-    generateRandomDataSet(arr);
+    quick_sort_test();
 
-    shaker_sort(arr);
-    //insertion_sort_1(arr);
-
-    std::cout<<"after non-adaptive bubble sort: "<<"\n";
-
-    std::copy(arr.begin(), arr.end(), std::ostream_iterator<int>(std::cout, ", "));
+    std::cout<<"\n==== test for generateBestDataSetForQSort "<<std::endl;
+    generateBestDataSetForQSort_test();
 }
