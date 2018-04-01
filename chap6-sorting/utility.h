@@ -3,8 +3,11 @@
 
 #include <cstdlib>
 #include <array>
+#include <stack>
+#include <queue>
 #include <iostream>
 #include <algorithm>
+#include <cassert>
 #include <ctime>
 
 template <size_t N>
@@ -212,33 +215,39 @@ small_key_range_sort(std::array<T, N>& arr)
         arr[i] = b[i];
 }
 
+template <class T, size_t N>
+int
+partition(std::array<T, N>&arr, int first, int last)
+{
+    typename std::array<T, N>::value_type v = arr[last];
+    int i = first-1;
+    int j = last;
+    while( i<j ){
+        while(arr[++i] < v) 
+            ;
 
+        while(j>first && v < arr[--j])
+            ;
+
+        if( i<j )
+            // advance of i, j will be done
+            // in the next loop of comparision
+            std::swap(arr[i], arr[j]);
+    }
+
+    std::swap(arr[i], arr[last]);
+    return i;
+}
 
 template <class T, size_t N>
 void
 quick_sort_1(std::array<T, N>& arr, int first, int last)
 {
+    int i ;
     if ( last <=first )
         return;
 
-    typename std::array<T, N>::value_type v = arr[last];
-    int i = first;
-    int j = last-1;
-
-    while( i<j ){
-        while(arr[i] < v)
-            i++;
-        while(j>first && arr[j]>= v) // need to cover  == v case
-            j--;
-
-        if( i<j )
-            std::swap(arr[i], arr[j]);
-    }
-
-    std::swap(arr[i], arr[last]);
-#ifdef DEBUG
-    std::cout<<"\ni, j "<<i<<", "<<j<<std::endl;
-#endif
+    i = partition(arr, first, last);
     quick_sort_1(arr, first, i-1);
     quick_sort_1(arr, i+1, last);
 }
@@ -250,7 +259,63 @@ quick_sort(std::array<T, N>& arr)
     quick_sort_1(arr, 0, N-1);
 }
 
+//example7.3
+template <class T, size_t N>
+void 
+non_recursive_quick_sort_by_stack(std::array<T, N>&arr)
+{
+    std::stack<std::pair<int, int>> stk;
+    stk.push(std::make_pair(0, N-1));
 
+    while(!stk.empty()){
+        auto range = stk.top();
+        int first = range.first;
+        int last = range.second;
+        stk.pop();
+
+        if ( last<=first )  
+            continue;
+
+        int i = partition(arr, first, last);
+
+        if ( i-1 > last-i ){
+            // prior to process sub array with less elements
+            // 
+            stk.push(std::make_pair(first, i-1));
+            stk.push(std::make_pair(i+1, last));      
+        } else {
+            stk.push(std::make_pair(i+1, last)); 
+            stk.push(std::make_pair(first, i-1));
+        }
+        
+    }   
+}
+
+//example7.3
+//refer: https://codereview.stackexchange.com/questions/178735/quick-sort-c-implementation?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
+// try use make_pair function
+template <class T, size_t N>
+void 
+non_recursive_quick_sort_by_queue(std::array<T, N>&arr)
+{
+    std::queue<std::pair<int, int> > Q;
+    Q.push(std::make_pair(0, N-1));
+
+    while(!Q.empty()){
+        auto range = Q.front();
+        Q.pop();
+
+        int first = range.first;
+        int last  = range.second;
+
+        if ( last<=first )  
+            continue;
+
+        int i = partition(arr, first, last);
+        Q.push(std::make_pair(first, i-1));
+        Q.push(std::make_pair(i+1, last));
+    }   
+}
 //ex7.10 
 // generate N unique data set 
 // which is best for quick sort
