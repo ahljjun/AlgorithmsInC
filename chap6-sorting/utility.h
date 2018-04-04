@@ -350,5 +350,52 @@ void generateBestDataSetForQSort(std::array<int, N>& arr)
     generateBestDataSetForQSort(arr, 0, N-1);
 }
 
+template <class T, size_t N, size_t M>
+void
+improved_quick_sort_1(std::array<T, N>& arr, int first, int last)
+{
+    int i ;
+    // for sub array with less than M elements,
+    // just stop the recursion and 
+    // the array will be the near-sorted one
+    // Insertion sort is a good candidate for such 
+    // kind of data sorting.
+    if ( last - first <= M ) 
+        return;
+
+    i = partition(arr, first, last);
+    quick_sort_1(arr, first, i-1);
+    quick_sort_1(arr, i+1, last);
+}
+
+
+template <class T, size_t N>
+void
+improved_quick_sort(std::array<T, N>&arr)
+{
+    improved_quick_sort_1<T, N,10>(arr, 0, N-1);
+    insertion_sort(arr);
+}
+
+template<class T, size_t N>
+T
+select(std::array<T, N> &arr, int k)
+{
+    assert(k>=0 && k<N);
+
+    int first = 0;
+    int last = N-1;
+    while( last > first ){
+        int i = partition(arr, first, last);
+        if ( i == k )
+            break;
+        if ( i>k )
+            last = i-1;
+        if ( i<k )
+            first = i+1;
+    }
+    return arr[k];
+}
+
 
 #endif

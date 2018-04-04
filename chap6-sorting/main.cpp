@@ -45,7 +45,31 @@ void generateBestDataSetForQSort_test()
 
     quick_sort(arr);
 }
- 
+
+void improved_quick_sort_test()
+{
+    std::array<int, 100> arr;
+    generateRandomDataSet(arr);
+    std::cout<<"\ndata for QSort: "<<std::endl;
+    dumpData(arr);
+
+    improved_quick_sort(arr);
+    std::cout<<"\nafter sorted: "<<std::endl;
+    dumpData(arr);
+}
+
+
+void select_test()
+{
+    std::array<int, 100> arr;
+    generateRandomDataSet(arr);
+    std::cout<<"\ndata for select: "<<std::endl;
+    dumpData(arr);
+
+    int val = select(arr, 21);
+    std::cout<<"\n21 key value is:"<<val<<std::endl;
+    dumpData(arr);
+}
 
 
 int main()
@@ -58,4 +82,10 @@ int main()
 
     std::cout<<"\n==== test for non_recursive_quick_sort_test "<<std::endl;
     non_recursive_quick_sort_test();
+
+    std::cout<<"\n==== test for improved_quick_sort_test "<<std::endl;
+    improved_quick_sort_test();
+
+    std::cout<<"\n==== test for select_test "<<std::endl;
+    select_test();  
 }
