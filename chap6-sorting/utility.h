@@ -10,6 +10,7 @@
 #include <cassert>
 #include <ctime>
 
+
 template <size_t N>
 void generateRandomDataSet(std::array<int, N>& arr)
 {
@@ -397,5 +398,105 @@ select(std::array<T, N> &arr, int k)
     return arr[k];
 }
 
+
+/***********************/
+/* chap8 - merge sort  */
+/************************/
+template <class T, size_t N, size_t M>
+void
+merge(const std::array<T, N>& a, const std::array<T, M>&b, std::array<T, N+M>& result)
+{
+    int i = 0;
+    int j = 0;
+    int k = 0;
+    while( i< N && j<M ){
+        if (a[i] < b[j]){
+            result[k++] = a[i++];
+        }
+        else {
+            result[k++] = b[j++] ;
+        }
+    }
+
+    if ( i==N ){
+        while(j<M) 
+            result[k++] = b[j++];
+    }
+    else if (j==M) {
+        while(i<N) 
+            result[k++] = a[i++];
+    }
+    else {
+        // we should not reach here
+        assert(0);
+    } 
+}
+
+// by coying the b array as the reverse order
+// make the aux array as bitonic sequence
+// sort bitonic sequence is like merge sort
+// the benifit is the largest num in the aux array
+// will be the pivot, which eliminates the array boundary check
+/// 
+template <class T, size_t N, size_t M>
+void
+merge_1(const std::array<T, N>& a, const std::array<T, M>&b, std::array<T, N+M>& result)
+{
+    std::array<T, N+M> aux;
+    int i,j,k;
+
+    for(i=0; i<N; i++)
+        aux[i] = a[i];
+
+    for(j=M; j>0; j--)
+        aux[N+M-j] = b[j-1]; 
+
+    i = 0;
+    j = N+M-1;
+    k = 0;
+    for(k=0; k< N+M; k++) {
+        if (aux[i] < aux[j]) {
+            result[k] = aux[i++];
+        } else {
+            result[k] = aux[j--];
+        }
+    }
+}
+
+
+const int maxN = 100;
+std::array<int, maxN> auxArr;
+template <class T, size_t N>
+void
+merge(std::array<T, N>& a, int first, int middle, int last)
+{
+    // could also used the temp result array as following
+    int i,j,k;
+    for(i = first; i <= last; i++)
+        auxArr[i] = a[i];
+
+    i = first;
+    j = last;
+    k = first;
+
+    for(i=first, j = middle+1, k = first; k <= last; k++) {
+
+        if ( i==(middle+1) ) { a[k] = auxArr[j++]; continue; }
+        if ( j==last+1 ) { a[k] = auxArr[i++]; continue; }
+
+        a[k]= (auxArr[i] < auxArr[j] ? auxArr[i++] : auxArr[j++]);
+    }
+}  
+
+template<class T, size_t N>
+void mergesort(std::array<T, N>&a, int first, int last)
+{
+    int m = (first+last)/2;
+    if (last <= first ) return;
+
+    mergesort(a, first, m);
+    mergesort(a, m+1, last);
+    merge(a, first, m, last);
+}
 
 #endif

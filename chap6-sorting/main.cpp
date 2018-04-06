@@ -1,6 +1,7 @@
 #include "utility.h"
 #include <array>
-
+#include <thread> // for std::this_thread:sleep_for
+#include <chrono> //
 
 
 
@@ -71,6 +72,62 @@ void select_test()
     dumpData(arr);
 }
 
+void merge_test()
+{
+    std::array<int, 10> a;
+    std::array<int, 20> b;
+    std::array<int, 30> c;
+
+    generateRandomDataSet(a);
+    std::cout<<"\ndump a:"<<std::endl; 
+    dumpData(a);
+    quick_sort(a);
+    std::cout<<"\ndump a after sorted:"<<std::endl; 
+    dumpData(a);
+
+    // delay 1 second to get different random set
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    generateRandomDataSet(b);
+    std::cout<<"\ndump b:"<<std::endl; 
+    dumpData(b);
+    quick_sort(b);
+    std::cout<<"\ndump b after sorted:"<<std::endl; 
+    dumpData(b);
+
+    // merge here
+    //merge_1(a, b, c);
+
+    // 
+    std::array<int, 30> d;
+    for(int i=0; i<10; i++)
+        d[i] = a[i];
+    for(int j=0; j<20; j++)
+        d[10+j] = b[j];
+    std::cout<<"\ndump d contents:"<<std::endl; 
+    dumpData(d);
+    merge(d,0,9,29);
+
+
+    std::cout<<"\ndump the merge result of a & b"<<std::endl; 
+    dumpData(d);
+
+}
+
+void mergesort_test()
+{
+    std::array<int, 30> a;
+    std::array<int, 30> b;
+
+    generateRandomDataSet(a);
+    std::copy(a.begin(), a.end(), b.begin());
+    quick_sort(a);
+    std::cout<<"\ndump the quick sort result of a"<<std::endl; 
+    dumpData(a);
+
+    mergesort(b, 0, 29);
+    std::cout<<"\ndump the merge result of b"<<std::endl;
+    dumpData(b);
+}
 
 int main()
 {
@@ -88,4 +145,10 @@ int main()
 
     std::cout<<"\n==== test for select_test "<<std::endl;
     select_test();  
+
+    std::cout<<"\n==== test for merge_test "<<std::endl;
+    merge_test();
+
+    std::cout<<"\n==== test for mergesort_test "<<std::endl;
+    mergesort_test();
 }
