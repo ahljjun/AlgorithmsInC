@@ -113,21 +113,42 @@ void merge_test()
 
 }
 
-void mergesort_test()
+template<class T, size_t N>
+void mergesort_test_1()
 {
-    std::array<int, 30> a;
-    std::array<int, 30> b;
+    std::array<T, N> a;
+    std::array<T, N> b;
+    std::array<T, N> c;
+    std::array<T, N> d;
 
     generateRandomDataSet(a);
     std::copy(a.begin(), a.end(), b.begin());
+    std::copy(a.begin(), a.end(), c.begin());
+    std::copy(a.begin(), a.end(), d.begin());
+
     quick_sort(a);
     std::cout<<"\ndump the quick sort result of a"<<std::endl; 
     dumpData(a);
 
-    mergesort(b, 0, 29);
+    mergesort(b, 0, N-1);
     std::cout<<"\ndump the merge result of b"<<std::endl;
     dumpData(b);
+
+    mergesortBU(c, 0, N-1);
+    std::cout<<"\ndump the bottom up merge result of c"<<std::endl;
+    dumpData(c);
+
+    improved_mergesortBU(d, 0, N-1);
+    std::cout<<"\ndump the bottom up merge result of d"<<std::endl;
+    dumpData(d);
 }
+
+void mergesort_test()
+{
+    mergesort_test_1<int, 32>();
+    mergesort_test_1<int, 33>();
+}
+
 
 int main()
 {

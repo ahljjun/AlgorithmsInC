@@ -404,7 +404,7 @@ select(std::array<T, N> &arr, int k)
 /************************/
 template <class T, size_t N, size_t M>
 void
-merge(const std::array<T, N>& a, const std::array<T, M>&b, std::array<T, N+M>& result)
+merge(std::array<T, N+M>& result, const std::array<T, N>& a, const std::array<T, M>&b)
 {
     int i = 0;
     int j = 0;
@@ -433,7 +433,8 @@ merge(const std::array<T, N>& a, const std::array<T, M>&b, std::array<T, N+M>& r
 }
 
 // by coying the b array as the reverse order
-// make the aux array as bitonic sequence
+
+
 // sort bitonic sequence is like merge sort
 // the benifit is the largest num in the aux array
 // will be the pivot, which eliminates the array boundary check
@@ -497,6 +498,70 @@ void mergesort(std::array<T, N>&a, int first, int last)
     mergesort(a, first, m);
     mergesort(a, m+1, last);
     merge(a, first, m, last);
+}
+
+//prog 8.5. bottom-up merge sort
+template<class T, size_t N>
+void mergesortBU(std::array<T, N>&a, int first, int last)
+{
+    int i, m;
+    // m-m merge 
+    // different scale
+    // bottom up
+    for(m = 1; m <= last-first; m = m+m){ 
+        for(i=first; i <= last-m; i += m+m){
+            merge(a, i, i+m-1, std::min(i+m+m-1, last));
+        }
+    }
+}
+
+
+template <class T, size_t N>
+void
+merge(std::array<T, N>& a, std::array<T, N>&aux, int first, int middle, int last)
+{
+    int i = first;
+    int j = last;
+    int k = first;
+
+    for(i=first, j = middle+1, k = first; k <= last; k++) {
+
+        if ( i==(middle+1) ) { a[k] = auxArr[j++]; continue; }
+        if ( j==last+1 ) { a[k] = auxArr[i++]; continue; }
+
+        a[k]= (auxArr[i] < auxArr[j] ? auxArr[i++] : auxArr[j++]);
+    }
+}  
+
+//ex8.31 bottom-up merge sort without copying array
+template<class T, size_t N>
+void improved_mergesortBU(std::array<T, N>&a, int first, int last)
+{
+    std::array<T, N> auxArr;
+    std::copy(a.begin(), a.end(), auxArr.begin());
+
+    int i, m;
+    bool flip=false;
+    // m-m merge 
+    // different scale: 1 - 2 - 4 - 8 - 16
+    // bottom up
+    int length = last - first;
+    while( length ){  
+        length = length >> 1;      
+        flip = !flip ;   
+    }
+
+    std::cout<<"\nlast, first, flip: "<<last<<","<<first<<","<<flip<<std::endl;
+
+
+    for(m = 1; m <= last-first; m = m+m, flip = !flip){ 
+        for(i=first; i <= last-m; i += m+m){
+            if (flip)
+                merge(a, auxArr, i, i+m-1, std::min(i+m+m-1, last));
+            else
+                merge(auxArr, a, i, i+m-1, std::min(i+m+m-1, last));
+        }
+    }
 }
 
 #endif
