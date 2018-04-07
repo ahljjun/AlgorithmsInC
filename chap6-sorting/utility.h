@@ -627,7 +627,7 @@ void heapsort(std::vector<T>&vec)
 template <class T>
 class priorityQueue {
 public:
-    explicit priorityQueue(const std::vector<T>& vec) : _vec(vec) {
+    explicit priorityQueue(const std::vector<T>& vec) : _vec(vec.begin(), vec.end()) {
         makeHeap<T>(_vec);
     }
 
@@ -646,6 +646,11 @@ public:
         _vec[0] = _vec[lastIndex];
         _vec.pop_back();
         fixDown(_vec, 0, --lastIndex);
+    }
+
+    void dump()
+    {
+        std:copy(_vec.begin(), _vec.end(), std::ostream_iterator<int>(std::cout, ", "));
     }
 
 private:

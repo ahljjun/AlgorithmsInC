@@ -173,6 +173,29 @@ void heap_test()
     heap_test_1<21>();
 }
 
+void priorityQ_test()
+{
+    std::array<int, 20> a;
+    generateRandomDataSet(a); 
+    dumpData(a);
+
+    std::vector<int> intVec(20);
+    std::copy(a.begin(), a.end(), intVec.begin());
+
+    priorityQueue<int> PQ(intVec);
+    std::cout<<"\nPQ: "<<std::endl;
+    PQ.dump();
+
+    std::cout<<"\n pop and sort the PQ: "<<std::endl;
+    std::vector<int> sortedVec;
+    while(!PQ.empty()){
+        int max = PQ.top();
+        PQ.pop();
+        sortedVec.push_back(max);
+    }
+    std:copy(sortedVec.begin(), sortedVec.end(), std::ostream_iterator<int>(std::cout, ", "));
+}
+
 
 
 int main()
@@ -200,4 +223,7 @@ int main()
 
     std::cout<<"\n==== test for heap_test "<<std::endl;
     heap_test();
+
+    std::cout<<"\n==== test for priorityQueue_test "<<std::endl;
+    priorityQ_test();
 }
