@@ -149,6 +149,31 @@ void mergesort_test()
     mergesort_test_1<int, 33>();
 }
 
+template <size_t N>
+void heap_test_1()
+{
+    std::array<int, N> a;
+    generateRandomDataSet(a); 
+
+    std::vector<int> intVec(20);
+    std::copy(a.begin(), a.end(), intVec.begin());
+
+    heapsort(intVec);
+    std::copy(intVec.begin(), intVec.end(), std::ostream_iterator<int>(std::cout, ",")); 
+
+}
+
+void heap_test()
+{
+    std::cout<<"\nheap sort for 20 elements"<<std::endl;
+    heap_test_1<20>();
+
+    std::cout<<"\nheap sort for 21 elements"<<std::endl;
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    heap_test_1<21>();
+}
+
+
 
 int main()
 {
@@ -172,4 +197,7 @@ int main()
 
     std::cout<<"\n==== test for mergesort_test "<<std::endl;
     mergesort_test();
+
+    std::cout<<"\n==== test for heap_test "<<std::endl;
+    heap_test();
 }

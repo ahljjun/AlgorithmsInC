@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <cassert>
 #include <ctime>
+#include <iterator> //for RandomAccessIterator
 
 
 template <size_t N>
@@ -563,5 +564,92 @@ void improved_mergesortBU(std::array<T, N>&a, int first, int last)
         }
     }
 }
+
+
+/************************* 
+
+******* Heap sort *******
+
+  Heapify:  1. bottom-up heapify()
+            2. top-down heapify()
+
+*************************/
+// as the index is from 0 ...
+// for the complete binary tree
+// so for the k node, its left child is 2k+1 node 
+// and its right child is 2k+2 node
+template <class T>
+void fixDown (std::vector<T>& vec, int k, int maxIndex)
+{
+    int j;
+    while((2*k+1) <= maxIndex){
+        j = 2*k+1;
+        // in case k = N/2, then, there will be only one child for node k
+        if(j<maxIndex && (vec[j] < vec[j+1])) j++; // select the vec[j] as max of [j],[j+1]
+        if(!(vec[k] < vec[j])) break;
+        std::swap(vec[k], vec[j]);
+        k = j;
+    }
+}
+
+template <class T>
+void fixUp (std::vector<T>& vec, int k)
+{
+    while(k > 0 && (vec[(k-1)/2] < vec[k])){
+        std::swap(vec[(k-1)/2], vec[k]);
+        k = (k-1)/2;
+    }
+}
+
+
+template <class T>
+void makeHeap (std::vector<T>& vec)
+{
+    int maxIndex = vec.size()-1;
+    for(int k = (maxIndex-1)/2; k>=0; k--){
+        fixDown(vec, k, maxIndex);
+    }
+}
+
+template <class T>
+void heapsort(std::vector<T>&vec)
+{
+    makeHeap(vec);
+
+    int size = vec.size();
+    int maxIndex = size -1 ;
+    while(maxIndex >0) {
+        std::swap(vec[0], vec[maxIndex]);
+        fixDown(vec,0,--maxIndex);
+    }
+}
+
+template <class T>
+class priorityQueue {
+public:
+    explicit priorityQueue(const std::vector<T>& vec) : _vec(vec) {
+        makeHeap<T>(_vec);
+    }
+
+    bool empty() {return _vec.empty();}
+    void push(const T& val)
+    {
+        _vec.push_back(val);
+        fixUp(_vec, _vec.size()-1);
+    }
+
+    const T& top() const {return _vec.front();}
+
+    void pop()
+    {
+        int lastIndex = _vec.size()-1;
+        _vec[0] = _vec[lastIndex];
+        _vec.pop_back();
+        fixDown(_vec, 0, --lastIndex);
+    }
+
+private:
+    std::vector<T> _vec;
+};
 
 #endif
