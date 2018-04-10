@@ -197,6 +197,30 @@ void priorityQ_test()
 }
 
 
+void indexSort_test()
+{
+    std::array<int, 20> arr;
+    generateRandomDataSet(arr); 
+    std::cout<<"\ndump dataset: "<<std::endl;
+    dumpData(arr);
+
+    std::array<int, 20> indexArr;
+    int n = 0;
+    std::generate(indexArr.begin(), indexArr.end(), [&n]{return n++;});
+    std::cout<<"\ndump indexArr: "<<std::endl;
+    dumpData(indexArr);
+
+    std::sort(indexArr.begin(), indexArr.end(), [&arr](int i, int j){return arr[i] < arr[j];});
+    std::cout<<"\nindex sorted: "<<std::endl;
+    dumpData(indexArr);
+
+    std::cout<<"\nsorted data:";
+    for(auto index : indexArr) {
+        std::cout<<arr[index]<<", ";
+    }
+    std::cout<<"\n";
+}
+
 
 int main()
 {
@@ -226,4 +250,8 @@ int main()
 
     std::cout<<"\n==== test for priorityQueue_test "<<std::endl;
     priorityQ_test();
+
+    std::cout<<"\n==== test for indexSort_test "<<std::endl;
+    indexSort_test();
+    return 0;
 }
