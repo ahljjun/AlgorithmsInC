@@ -219,6 +219,19 @@ void indexSort_test()
         std::cout<<arr[index]<<", ";
     }
     std::cout<<"\n";
+
+
+    // in-place sort using index array
+    int i, j, k;
+    for(i = 0; i < 20; i++){
+        int v = arr[i];
+        for(k=i; a[k] != i; k=a[j], a[j]=j){
+            j = k;
+            arr[k] = arr[indexArr[k]];
+        }
+        arr[k] = v; 
+        a[k] = k;
+    }
 }
 
 
