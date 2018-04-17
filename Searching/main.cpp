@@ -1,6 +1,8 @@
 #include "../sorting/utility.h"
 #include "utility.h"
 
+#include <memory>
+
 void BinarySearch_test()
 {
     std::array<int, 100> arr;
@@ -24,4 +26,9 @@ int main()
 {
     // test
     BinarySearch_test();
+    BSTree<int> tree;
+
+    std::shared_ptr<int> p = std::make_shared<int>(10);
+    std::shared_ptr<int> q;
+
 }
