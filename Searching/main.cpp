@@ -2,6 +2,7 @@
 #include "utility.h"
 
 #include <memory>
+#include <cassert>
 
 void BinarySearch_test()
 {
@@ -20,15 +21,41 @@ void BinarySearch_test()
         std::cout<<"\nFound it: "<<std::endl;
 }
 
+//ex12.44
+void BSTree_ex12_45()
+{
+    BSTree<char> tree;
+    tree.insert('E');
+    tree.insert('A');
+    tree.insert('S');
+    tree.insert('Y');
+    tree.insert('Q');    
+    tree.insert('U');
+    tree.insert('E');
+    tree.insert('S');
+    tree.insert('T');
+    tree.insert('I');
+    tree.insert('O');
+    tree.insert('N');
+
+    tree.inorder();
+
+    int cnt = tree.search('S');
+    assert(cnt == 2);
+
+    cnt = tree.search('I');
+    assert(cnt == 1);  
+
+    cnt = tree.search('Z');
+    assert(cnt == 0);    
+}
 
 
 int main()
 {
     // test
     BinarySearch_test();
-    BSTree<int> tree;
 
-    std::shared_ptr<int> p = std::make_shared<int>(10);
-    std::shared_ptr<int> q;
+    BSTree_ex12_45();
 
 }

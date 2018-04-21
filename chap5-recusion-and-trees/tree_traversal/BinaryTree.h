@@ -309,7 +309,6 @@ private:
 				if (node->left)
 					nodeStack.push(std::make_pair(node->left, false));
 			}
-
 		}
 	}
 

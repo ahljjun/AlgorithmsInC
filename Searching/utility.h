@@ -6,6 +6,8 @@
 
 #include <memory> // shared_ptr
 
+#include <list> // stl dual-list
+
 //Generic Declartion
 template<typename RandomIterator, 
     typename C = typename std::iterator_traits<RandomIterator>::iterator_category>
@@ -51,74 +53,134 @@ RandomIterator BinarySearch(RandomIterator first,
 }
 
 
-
+//
+// 
+//
+//
 // binary search tree implementation
 template <typename T>
 class BSTree {
     struct TreeNode{
         T key;
-        std::shared_ptr<TreeNode*> left;
-        std::shared_ptr<TreeNode*> right;
-        TreeNode(): key(), left(), right(){}
+        std::unique_ptr<TreeNode> left;
+        std::unique_ptr<TreeNode> right;
+#ifdef DUPKEY_LIST
+        std::list<std::unique_ptr<TreeNode>> keylist; // ex12_51
+#endif
         TreeNode(T x): key(x), left(), right() {}
     };
 
     // the root of the tree
-    std::shared_ptr<TreeNode*> root;
+    std::unique_ptr<TreeNode> root; 
 
 public:
     BSTree() : root() {}
-    ~BSTree();
-
+    ~BSTree() { clean(); }
     BSTree(BSTree&&) = default; // move semantics
     BSTree& operator= (BSTree& rhs) = default;
     BSTree(const BSTree&);
     BSTree& operator=(const BSTree& rhs);
-    bool push(T);
-    bool remove(T);
+    void insert(const T& key);
     void inorder();
-    shared_ptr<T> find(T, x) {
-        return find (x, root);
-    }
 
-    size_t height() {
-        return height(root);
-    }
+    int search(const T& key);
+
+private:
+    void inorder_1(TreeNode* root);
+    void clean();
 };
 
 template<typename T>
-bool BSTree<T>::remove(T x, std::shared_ptr<T> &p)
+void BSTree<T>::insert(const T& key)
 {
-    if ( p && x < p->key )
-        return remove(x, p->left);
-    else if (p && x > p->key)
-        return remove(x, p->right);
-    else if (p && p->key == x)
-    {
-        // how to remove the node is key:
-        // 1. there is only one child ,
-        //  use the child to replace the parent
-        // 
-        // if ( !p->left  && !p->right) ?? why no need this?
-        if (!p->left) 
-            p = p->right;
-        else if (!p->right)
-            p = p->left;
+    std::unique_ptr<TreeNode> node(new TreeNode(key)); 
+    if ( root == nullptr ){
+        root = std::move(node);
+        return;
+    }
+
+    TreeNode *temp = root.get();
+    TreeNode *parent = nullptr;
+    while(temp != nullptr){
+        parent = temp;
+        if (key < parent->key){
+            temp = parent->left.get();
+        }
+#ifdef DUPKEY_LIST
+        else if (key == parent->key){
+            parent->keylist.push_back(std::move(node));         
+            return ;
+        }
+#endif
         else {
-            // need to find the "后继" node
-            // 左子树的右节点
-            std::shared_ptr<TreeNode> q = p->left;
-            while(q->right) q = q->right;// find the leaf node
-            p->key = q->key;
-            // how to remove the q?
-                      
+            temp = parent->right.get();
         }
     }
 
+    if (key < parent->key) {
+        parent->left = std::move(node);
+    }
+    else {
+        parent->right = std::move(node);
+    }
+}
+
+template<typename T>
+int BSTree<T>::search(const T& key)
+{
+    if ( root == nullptr ){
+        return 0;
+    }
+
+    int cnt = 0;
+
+    TreeNode *temp = root.get();
+    TreeNode *parent = nullptr;
+    while(temp != nullptr){
+        parent = temp;
+        if (key < parent->key){
+            temp = parent->left.get();
+        }
+        else {
+#ifdef DUPKEY_LIST
+        if (key == parent->key){
+            return parent->keylist.size()+1;
+        }
+#else 
+            if (key == parent->key) cnt++;
+#endif
+            temp = parent->right.get();
+        }
+    }
+
+    return cnt;
+}
+
+template<typename T>
+void BSTree<T>::inorder()
+{
+    inorder_1(root.get());
+}
+
+template<typename T>
+void BSTree<T>::inorder_1(TreeNode* root)
+{
+    if ( root == nullptr ) {
+        std::cout<<"nil"<<std::endl;
+        return;
+    }
+
+    inorder_1(root->left.get());
+    std::cout<<root->key<<", ";
+    inorder_1(root->right.get());
 }
 
 
-
+template<typename T>
+void BSTree<T>::clean()
+{
+    return;
+}
 
 
 #endif
